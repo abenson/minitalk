@@ -1,9 +1,9 @@
-all: chat
+all: minitalk
 
 #CFLAGS=-W -Wall -ansi -pedantic
 LDFLAGS=-lreadline
 
-chat: minitalk.c
+minitalk: minitalk.c
 
 clean:
 	rm -f minitalk
