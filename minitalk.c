@@ -45,6 +45,9 @@ SOFTWARE.
 #define TIME_FORMAT "%Y-%m-%d %H:%M"
 #define TIME_STRSIZE 20
 
+/* Maximum supported message size, including datetime/username */
+#define MSG_LEN 1025
+
 #define PROMPT "> "
 
 /* GLOBALS */
@@ -104,17 +107,17 @@ static void write_status(const char *status)
 /* Read all of the messages from the transcript since the last read */
 static void check_msgs(void)
 {
-	char msg[120];
+	char msg[MSG_LEN];
 	char *saved_line = NULL;
 	int saved_point = 0;
 
 	/* Go back to the last read point. */
 	fseek(ctrl, last_read_pos, SEEK_SET);
 
-	while(fgets(msg, 255, ctrl) != NULL) {
+	while(fgets(msg, MSG_LEN, ctrl) != NULL) {
 
 		/* This is readline stuff.
-		   - save the cursor position 
+		   - save the cursor position
 		   - save the current line contents
 		   - set the line to blank
 		   - tell readline we're done mucking
