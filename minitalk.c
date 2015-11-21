@@ -24,6 +24,8 @@ SOFTWARE.
 
 /* minichat - small chat system for multiple users on a UNIX-like host */
 
+#define VERSION "0.1.1"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -244,6 +246,7 @@ int main(int argc, char *argv[])
 
 	/* We always require a file, will guess a nick if none provided.*/
 	if(argc < 2) {
+		fprintf(stderr, "%s v%s - a small chat system for multiple users\n", argv[0], VERSION);
 		fprintf(stderr, "usage: %s file [nick]\n", argv[0]);
 		return 1;
 	}
