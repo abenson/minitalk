@@ -56,7 +56,6 @@ SOFTWARE.
 static FILE *ctrl = NULL;
 
 static char nick[MAX_NICK_SIZE] = {0};
-static char *msg;
 
 /* Keep track of the last position we read from. */
 static long last_read_pos = 0;
@@ -234,7 +233,7 @@ void get_input(void) {
 	/* If data is avaiable, read it. Else carry on */
 	if (count > 0) {
 		rl_callback_read_char();
-	} 
+	}
 }
 
 int main(int argc, char *argv[])
