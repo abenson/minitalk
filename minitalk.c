@@ -321,5 +321,9 @@ int main(int argc, char *argv[])
 	/* Being a good citizen. Closing file handles. */
 	fclose(ctrl);
 
+	/* Clean up screen. */
+	rl_set_prompt("");
+	rl_redisplay();
+
 	return 0;
 }
