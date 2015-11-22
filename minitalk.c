@@ -161,6 +161,12 @@ static void check_msgs(void)
 		fseek(ctrl, last_read_pos, SEEK_SET);
 
 		while(fgets(msg, MSG_LEN, ctrl) != NULL) {
+			char *str;
+			if(str = strstr(msg, ">")) {
+				if(strstr(str, nick)) {
+					rl_ding();
+				}
+			}
 			print_line(msg);
 		}
 
