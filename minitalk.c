@@ -112,41 +112,58 @@ static void check_msgs(void)
 	char *saved_line = NULL;
 	int saved_point = 0;
 
-	/* Go back to the last read point. */
-	fseek(ctrl, last_read_pos, SEEK_SET);
+	int count;
+	fd_set fds;
+	int fd;
+	struct timeval t;
 
-	while(fgets(msg, MSG_LEN, ctrl) != NULL) {
+	/* Timeout of 0. */
+	t.tv_sec = 0;
+	t.tv_usec = 0;
 
-		/* This is readline stuff.
-		   - save the cursor position
-		   - save the current line contents
-		   - set the line to blank
-		   - tell readline we're done mucking
-		   - print the message
-		   - restore the standard prompt
-		   - restore the line contents
-		   - restore the cursor position
-		   - tell readline we're done mucking (again)
-		*/
-		saved_point = rl_point;
-		saved_line = rl_copy_text(0, rl_end);
-		rl_set_prompt("");
-		rl_replace_line("",0);
-		rl_redisplay();
-		fprintf(stdout, "%s", msg);
-		rl_set_prompt(PROMPT);
-		rl_replace_line(saved_line, 0);
-		rl_point = saved_point;
-		rl_redisplay();
-		free(saved_line);
+	/* Does ctrl have data available for reading? */
+	FD_ZERO(&fds);
+	fd = fileno(ctrl);
+	FD_SET(fd, &fds);
+	count = select(FD_SETSIZE, &fds, NULL, NULL, &t);
+
+	if(count > 0) {
+		/* Go back to the last read point. */
+		fseek(ctrl, last_read_pos, SEEK_SET);
+
+		while(fgets(msg, MSG_LEN, ctrl) != NULL) {
+
+			/* This is readline stuff.
+			   - save the cursor position
+			   - save the current line contents
+			   - set the line to blank
+			   - tell readline we're done mucking
+			   - print the message
+			   - restore the standard prompt
+			   - restore the line contents
+			   - restore the cursor position
+			   - tell readline we're done mucking (again)
+			*/
+			saved_point = rl_point;
+			saved_line = rl_copy_text(0, rl_end);
+			rl_set_prompt("");
+			rl_replace_line("",0);
+			rl_redisplay();
+			fprintf(stdout, "%s", msg);
+			rl_set_prompt(PROMPT);
+			rl_replace_line(saved_line, 0);
+			rl_point = saved_point;
+			rl_redisplay();
+			free(saved_line);
+		}
+
+
+		/* Update the last read position */
+		last_read_pos = ftell(ctrl);
+
+		/* Set the file position at the end of the file */
+		fseek(ctrl, 0L, SEEK_END);
 	}
-
-
-	/* Update the last read position */
-	last_read_pos = ftell(ctrl);
-
-	/* Set the file position at the end of the file */
-	fseek(ctrl, 0L, SEEK_END);
 }
 
 void sig_handler(int signal)
@@ -240,10 +257,6 @@ void get_input(void) {
 
 int main(int argc, char *argv[])
 {
-
-	struct sigaction sigact = {0};
-	struct itimerval timer = {0};
-
 	/* We always require a file, will guess a nick if none provided.*/
 	if(argc < 2) {
 		fprintf(stderr, "%s v%s - a small chat system for multiple users\n", argv[0], VERSION);
@@ -272,26 +285,6 @@ int main(int argc, char *argv[])
 	/* This is now our "last read" position. */
 	last_read_pos = ftell(ctrl);
 
-	/* We're using setitimer, which sends a SIGALRM.
-	   - sig_handler will handle when we get the alarm
-	   - don't mask any signals
-	   - no special behaviors
-	   - perform action when we get SIGALRM
-	*/
-	sigact.sa_handler = sig_handler;
-	sigemptyset(&sigact.sa_mask);
-	sigact.sa_flags = 0;
-
-	sigaction(SIGALRM, &sigact, NULL);
-
-	/* This may be tweaked later, but for now fire every second*/
-	timer.it_interval.tv_sec = 1;
-	timer.it_interval.tv_usec = 0;
-	timer.it_value.tv_sec = 1;
-	timer.it_value.tv_usec = 0;
-
-	setitimer(ITIMER_REAL, &timer, NULL);
-
 	/* Tell readline to let us know when the user hits enter. */
 	rl_bind_key(RETURN, handle_enter);
 
@@ -305,6 +298,8 @@ int main(int argc, char *argv[])
 	/* Until we decide to quit, tell readline to grab characters if they're available. */
 	while(cont) {
 		get_input();
+		usleep(10000);
+		check_msgs();
 		usleep(10000);
 	}
 
