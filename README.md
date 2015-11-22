@@ -29,5 +29,5 @@ By default, it uses your username as the nick. You can override this by passing 
 
 To send a message, type it and hit enter. To quit, type `/quit`.
 
-[A demo!](doc/minitalk.gif)
+![A demo!](doc/minitalk.gif)
 
