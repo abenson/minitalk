@@ -105,13 +105,42 @@ static void write_status(const char *status)
 	fflush(ctrl);
 }
 
+/* Handle readline stuff and print a message to the screen. */
+
+static void print_line(char *line)
+{
+
+	char *saved_line = NULL;
+	int saved_point = 0;
+
+	/* This is readline stuff.
+	   - save the cursor position
+	   - save the current line contents
+	   - set the line to blank
+	   - tell readline we're done mucking
+	   - print the message
+	   - restore the standard prompt
+	   - restore the line contents
+	   - restore the cursor position
+	   - tell readline we're done mucking (again)
+	*/
+	saved_point = rl_point;
+	saved_line = rl_copy_text(0, rl_end);
+	rl_set_prompt("");
+	rl_replace_line("",0);
+	rl_redisplay();
+	fprintf(stdout, "%s", line);
+	rl_set_prompt(PROMPT);
+	rl_replace_line(saved_line, 0);
+	rl_point = saved_point;
+	rl_redisplay();
+	free(saved_line);
+}
+
 /* Read all of the messages from the transcript since the last read */
 static void check_msgs(void)
 {
 	char msg[MSG_LEN];
-	char *saved_line = NULL;
-	int saved_point = 0;
-
 	int count;
 	fd_set fds;
 	int fd;
@@ -132,31 +161,8 @@ static void check_msgs(void)
 		fseek(ctrl, last_read_pos, SEEK_SET);
 
 		while(fgets(msg, MSG_LEN, ctrl) != NULL) {
-
-			/* This is readline stuff.
-			   - save the cursor position
-			   - save the current line contents
-			   - set the line to blank
-			   - tell readline we're done mucking
-			   - print the message
-			   - restore the standard prompt
-			   - restore the line contents
-			   - restore the cursor position
-			   - tell readline we're done mucking (again)
-			*/
-			saved_point = rl_point;
-			saved_line = rl_copy_text(0, rl_end);
-			rl_set_prompt("");
-			rl_replace_line("",0);
-			rl_redisplay();
-			fprintf(stdout, "%s", msg);
-			rl_set_prompt(PROMPT);
-			rl_replace_line(saved_line, 0);
-			rl_point = saved_point;
-			rl_redisplay();
-			free(saved_line);
+			print_line(msg);
 		}
-
 
 		/* Update the last read position */
 		last_read_pos = ftell(ctrl);
