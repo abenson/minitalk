@@ -188,6 +188,8 @@ void handle_msg(char *msg)
 		/* Quit if told to quit. Only write the message if there's something to say. */
 		if(strncmp(msg, "/quit", 5) == 0)  {
 			cont = NO;
+		} else if(strncmp(msg, "/", 1) == 0) {
+			print_line("Unknown command.\n");
 		} else if(strlen(msg) > 0) {
 			write_msg(msg);
 		}
