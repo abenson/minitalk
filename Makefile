@@ -2,7 +2,7 @@ PREFIX=/usr/local
 
 all: minitalk
 
-#CFLAGS=-W -Wall -ansi -pedantic
+CFLAGS=-D_REENTRANT -D_POSIX_C_SOURCE -ansi -pedantic -W -Wall
 LDFLAGS=-lreadline
 
 minitalk: minitalk.c
