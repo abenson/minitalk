@@ -178,13 +178,7 @@ static void check_msgs(void)
 	}
 }
 
-void sig_handler(int signal)
-{
-	/* We could have the signal handler call check_msgs directly, I guess */
-	check_msgs();
-}
-
-void handle_msg(char *msg)
+static void handle_msg(char *msg)
 {
 	/* Only care if we're called on a real message. */
 	if(msg) {
@@ -218,7 +212,7 @@ static void handle_line_fake(char *line)
 	}
 }
 
-int handle_enter(int x, int y)
+static int handle_enter(int x, int y)
 {
 	char *line = NULL;
 
@@ -249,7 +243,7 @@ int handle_enter(int x, int y)
 
 
 /* Don't block on I/O. */
-void get_input(void) {
+static void get_input(void) {
 	int count;
 	fd_set fds;
 	struct timeval t;
