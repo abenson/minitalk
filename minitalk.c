@@ -180,6 +180,7 @@ static void check_msgs(void)
 
 static void handle_msg(char *msg)
 {
+	char lmsg[MSG_LEN] = {0};
 	/* Only care if we're called on a real message. */
 	if(msg) {
 		/* readline keeps history, let's use */
@@ -189,7 +190,8 @@ static void handle_msg(char *msg)
 		if(strncmp(msg, "/quit", 5) == 0)  {
 			cont = NO;
 		} else if(strncmp(msg, "/", 1) == 0) {
-			print_line("Unknown command.\n");
+			snprintf(lmsg, MSG_LEN, "Unknown command: %s\n", msg+1);
+			print_line(lmsg);
 		} else if(strlen(msg) > 0) {
 			write_msg(msg);
 		}
