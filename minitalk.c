@@ -305,6 +305,7 @@ int main(int argc, char *argv[])
 	/* Until we decide to quit, tell readline to grab characters if they're available. */
 	while(cont) {
 		get_input();
+		usleep(10000);
 	}
 
 	/* We're quitting now. Say goodbye. */
