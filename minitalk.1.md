@@ -1,19 +1,21 @@
-# minitalk
+% MINITALK(1) Minitalk User Manual
+% Andrew Benson
+% December 26, 2015
 
-## NAME
+# NAME
 
 minitalk - small, simple chat system
 
-## SYNOPSIS
+# SYNOPSIS
 
 minitalk FILE [NICK]
 
-## DESCRIPTION
+# DESCRIPTION
 
 FILE File to use as "room". Must have read/write permissions.
 NICK Specify nick to use. Default is current username.
 
-## EXAMPLES
+# EXAMPLES
 
 Join a room controlled via /var/chat/general.
 
@@ -23,10 +25,10 @@ The same, but specifying the username "admin".
 
 	$ minitalk /var/chat/general admin
 
-## AUTHOR
+# AUTHOR
 
-Written by Andrew Benson. 
+Written by Andrew Benson.
 
-## COPYRIGHT
+# COPYRIGHT
 
 Copyright © 2015 Andrew Benson. License: MIT

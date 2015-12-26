@@ -1,0 +1,39 @@
+.TH "MINITALK" "1" "December 26, 2015" "Minitalk User Manual" ""
+.SH NAME
+.PP
+minitalk \- small, simple chat system
+.SH SYNOPSIS
+.PP
+minitalk FILE [NICK]
+.SH DESCRIPTION
+.PP
+FILE File to use as "room".
+Must have read/write permissions.
+NICK Specify nick to use.
+Default is current username.
+.SH EXAMPLES
+.PP
+Join a room controlled via /var/chat/general.
+.IP
+.nf
+\f[C]
+$\ minitalk\ /var/chat/general
+\f[]
+.fi
+.PP
+The same, but specifying the username "admin".
+.IP
+.nf
+\f[C]
+$\ minitalk\ /var/chat/general\ admin
+\f[]
+.fi
+.SH AUTHOR
+.PP
+Written by Andrew Benson.
+.SH COPYRIGHT
+.PP
+Copyright © 2015 Andrew Benson.
+License: MIT
+.SH AUTHORS
+Andrew Benson.
