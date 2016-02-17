@@ -43,8 +43,8 @@ SOFTWARE.
 /* The maximum length of a nick string (will be truncated) */
 #define MAX_NICK_SIZE 15
 
-/* Time format will be fixed format [YYYY-MM-DD HH:MM] */
-#define TIME_FORMAT "%Y-%m-%d %H:%M"
+/* Time format will be fixed format [YYYY-MM-DD HH:MM:SS] */
+#define TIME_FORMAT "%Y-%m-%d %H:%M:%S"
 #define TIME_STRSIZE 20
 
 /* Maximum supported message size, including datetime/username */
