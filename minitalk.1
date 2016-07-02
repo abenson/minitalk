@@ -1,4 +1,4 @@
-.TH "MINITALK" "1" "December 26, 2015" "Minitalk User Manual" ""
+.TH "MINITALK" "1" "July 2016" "Minitalk 0.2.3" ""
 .SH NAME
 .PP
 minitalk \- small, simple chat system
@@ -9,6 +9,7 @@ minitalk FILE [NICK]
 .PP
 FILE File to use as "room".
 Must have read/write permissions.
+.PP
 NICK Specify nick to use.
 Default is current username.
 .SH EXAMPLES
@@ -28,12 +29,24 @@ The same, but specifying the username "admin".
 $\ minitalk\ /var/chat/general\ admin
 \f[]
 .fi
+.SH ISSUES
+.PP
+The primary issue is a security concern.
+Anyone that needs to chat in the "room" has to be able to write to
+the control file.
+Anyone that needs read from the room needs read access.
+Anyone that has access to these "control" files can also inject anything
+they want into the chat.
+This truly is built on the honor system, and was designed around a
+single purpose: multi\-user chat between trusted users on a single host.
+.PP
+Don\[aq]t expect this to be secure.
 .SH AUTHOR
 .PP
 Written by Andrew Benson.
 .SH COPYRIGHT
 .PP
-Copyright © 2015 Andrew Benson.
+Copyright © 2016 Andrew Benson.
 License: MIT
 .SH AUTHORS
 Andrew Benson.
