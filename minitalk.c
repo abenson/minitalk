@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2015 Andrew Benson
+Copyright (c) 2016 Andrew Benson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ SOFTWARE.
 
 /* minichat - small chat system for multiple users on a UNIX-like host */
 
-#define VERSION "0.2.1"
+#define VERSION "0.2.3"
 
 #include <stdio.h>
 #include <stdlib.h>
