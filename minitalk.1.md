@@ -13,6 +13,7 @@ minitalk FILE [NICK]
 # DESCRIPTION
 
 FILE File to use as "room". Must have read/write permissions.
+
 NICK Specify nick to use. Default is current username.
 
 # EXAMPLES
@@ -25,10 +26,16 @@ The same, but specifying the username "admin".
 
 	$ minitalk /var/chat/general admin
 
+# ISSUES
+
+The primary issue is a security concern. Anyone that needs to chat in the "room" has to be able to write the control file. Anyone that needs read from the room needs read access. Anyone that has access to these "control" files can also inject anything they want into the chat. This truly is built on the honor system, and was designed around a single purpose: multi-user chat between trusted users on a single host.
+
+Don't expect this to be secure.
+
 # AUTHOR
 
 Written by Andrew Benson.
 
 # COPYRIGHT
 
-Copyright © 2015 Andrew Benson. License: MIT
+Copyright © 2016 Andrew Benson. License: MIT
