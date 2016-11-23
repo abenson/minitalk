@@ -7,7 +7,7 @@ LDFLAGS=-lreadline
 minitalk: minitalk.c
 
 minitalk.1: minitalk.1.md
-	pandoc -t man -o minitalk.1 minitalk.1.md
+	pandoc -s -t man -o minitalk.1 minitalk.1.md
 
 clean:
 	rm -f minitalk
