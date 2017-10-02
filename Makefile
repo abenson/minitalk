@@ -2,9 +2,11 @@ PREFIX=/usr/local
 
 all: minitalk
 
+CC=gcc
 LDFLAGS=-lreadline
 
 minitalk: minitalk.c
+	$(CC) -o minitalk minitalk.c $(CFLAGS) $(LDFLAGS)
 
 minitalk.1: minitalk.1.md
 	pandoc -s -t man -o minitalk.1 minitalk.1.md
@@ -14,4 +16,4 @@ clean:
 
 install: minitalk
 	/usr/bin/install -t $(PREFIX)/bin minitalk
-	/usr/bin/install -t $(PREFIX)/man/man1 minitalk.1
+	/usr/bin/install -t $(PREFIX)/share/man/man1 minitalk.1
