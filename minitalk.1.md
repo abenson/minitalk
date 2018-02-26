@@ -1,6 +1,6 @@
-% MINITALK(1) Minitalk User Manual | Minitalk 0.2.3
+% MINITALK(1) Minitalk User Manual | Minitalk 0.2.5
 % Andrew Benson
-% November 2016
+% November 2018
 
 # NAME
 
@@ -41,4 +41,4 @@ Andrew Benson.
 
 # COPYRIGHT
 
-Copyright © 2016 Andrew Benson. License: MIT
+Copyright © 2018 Andrew Benson. License: MIT
