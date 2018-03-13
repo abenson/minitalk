@@ -127,7 +127,8 @@ static void print_line(char *line)
 	saved_point = rl_point;
 	saved_line = rl_copy_text(0, rl_end);
 	rl_set_prompt("");
-	rl_replace_line("",0);
+	rl_clear_message();
+	rl_replace_line("", 0);
 	rl_redisplay();
 	fprintf(stdout, "%s", line);
 	rl_set_prompt(PROMPT);
@@ -328,7 +329,7 @@ int main(int argc, char *argv[])
 
 	/* Clean up screen. */
 	rl_set_prompt("");
+	rl_clear_message();
 	rl_redisplay();
-
 	return 0;
 }
