@@ -2,11 +2,10 @@ PREFIX=/usr/local
 
 all: minitalk
 
-CC=gcc
 LDFLAGS=-lreadline
 
 minitalk: minitalk.c
-	$(CC) -o minitalk minitalk.c $(CFLAGS) $(LDFLAGS)
+	$(CC) $(CFLAGS) -o minitalk minitalk.c $(CFLAGS) $(LDFLAGS)
 
 minitalk.1: minitalk.1.md
 	pandoc -s -t man -o minitalk.1 minitalk.1.md

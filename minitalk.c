@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2016 Andrew Benson
+Copyright (c) 2018 Andrew Benson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ SOFTWARE.
 
 /* minichat - small chat system for multiple users on a UNIX-like host */
 
-#define VERSION "0.2.3"
+#define VERSION "0.2.5"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -57,7 +57,7 @@ SOFTWARE.
 /* File used for chat */
 static FILE *ctrl = NULL;
 
-static char nick[MAX_NICK_SIZE] = {0};
+static char *nick;
 
 /* Keep track of the last position we read from. */
 static long last_read_pos = 0;
@@ -127,7 +127,8 @@ static void print_line(char *line)
 	saved_point = rl_point;
 	saved_line = rl_copy_text(0, rl_end);
 	rl_set_prompt("");
-	rl_replace_line("",0);
+	rl_clear_message();
+	rl_replace_line("", 0);
 	rl_redisplay();
 	fprintf(stdout, "%s", line);
 	rl_set_prompt(PROMPT);
@@ -281,12 +282,15 @@ int main(int argc, char *argv[])
 	}
 
 	if(argv[2] == NULL) {
-		/* If no nick is provided, pick based on the username. */
-		getlogin_r(nick, MAX_NICK_SIZE);
+		/* If no nick is provided, pick based on the username */
+		nick = getenv("LOGNAME");
+		if(nick == NULL) {
+			fprintf(stderr, "Can't determine username."
+				"Fix your environment or specify a name on the command line.");
+		}
 	} else {
-		/* Copy from argv and make sure its null-terminated.*/
-		strncpy(nick, argv[2], MAX_NICK_SIZE);
-		nick[MAX_NICK_SIZE-1] = '\0';
+		/* Copy from command line. */
+		nick = argv[2];
 	}
 
 	/* Open the file. Always write at the end. */
@@ -331,7 +335,7 @@ int main(int argc, char *argv[])
 
 	/* Clean up screen. */
 	rl_set_prompt("");
+	rl_clear_message();
 	rl_redisplay();
-
 	return 0;
 }
