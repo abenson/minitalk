@@ -193,8 +193,8 @@ static void handle_msg(char *msg)
 			cont = NO;
 		} else if(strncmp(msg, "/nick", 5) == 0) {
 			strncpy(nnick, msg+6, MAX_NICK_SIZE);
-			snprintf(lmsg, MSG_LEN, "%s is now known as %s\n", nick, nnick);
-			print_line(lmsg);
+			snprintf(lmsg, MSG_LEN, "is now known as %s", nnick);
+			write_status(lmsg);
 			strncpy(nick, nnick, MAX_NICK_SIZE);
 		} else if(strncmp(msg, "/", 1) == 0) {
 			snprintf(lmsg, MSG_LEN, "Unknown command: %s\n", msg+1);
