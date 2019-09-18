@@ -295,8 +295,16 @@ static void get_input(void) {
 	}
 }
 
+static void handle_exit_signal(int signal)
+{
+	fprintf(stderr, "Received signal %d, exiting.\n", signal);
+	cont = NO;
+}
+
 int main(int argc, char *argv[])
 {
+	struct sigaction sa_exit;
+
 	/* We always require a file, will guess a nick if none provided.*/
 	if(argc < 2) {
 		fprintf(stderr, "%s v%s - a small chat system for multiple users\n", argv[0], VERSION);
@@ -328,6 +336,12 @@ int main(int argc, char *argv[])
 		}
 		strncpy(nick, argv[2], MAX_NICK_SIZE);
 	}
+
+	/* Setup signal handlers */
+	sa_exit.sa_handler = handle_exit_signal;
+	sigemptyset(&sa_exit.sa_mask);
+	sigaction(SIGINT, &sa_exit, NULL);
+	sigaction(SIGTERM, &sa_exit, NULL);
 
 	/* Open the file. Always write at the end. */
 	ctrl = fopen(argv[1], "a+");
