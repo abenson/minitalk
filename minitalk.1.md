@@ -16,7 +16,8 @@ FILE
   ~ File to use as "room". Must have read/write permissions.
 
 NICK
-  ~ Specify nick to use. Default is current username.
+  ~ Specify nick to use. Default is current username. Must be 1-15 characters
+in length, and must only contain numbers and letters.
 
 # EXAMPLE
 
