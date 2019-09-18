@@ -57,7 +57,7 @@ SOFTWARE.
 /* File used for chat */
 static FILE *ctrl = NULL;
 
-static char *nick;
+static char nick[MAX_NICK_SIZE+1];
 
 /* Keep track of the last position we read from. */
 static long last_read_pos = 0;
@@ -179,10 +179,28 @@ static void check_msgs(void)
 	}
 }
 
+static BOOL is_nick_allowed(char *nick)
+{
+	/* Verify there are only alpha-numeric characters in the nick,
+	   it is at least one character, and is no more than the maximum
+	   buffer size */
+	if(nick == NULL || strlen(nick) < 1 || strlen(nick) > MAX_NICK_SIZE) {
+		return NO;
+	}
+
+	while(*nick) {
+		if(!isalnum(*nick)) {
+			return NO;
+		}
+		nick++;
+	}
+	return YES;
+}
+
 static void handle_msg(char *msg)
 {
 	char lmsg[MSG_LEN] = {0};
-	char nnick[MAX_NICK_SIZE] = {0};
+	char nnick[MAX_NICK_SIZE+1] = {0};
 	/* Only care if we're called on a real message. */
 	if(msg) {
 		/* readline keeps history, let's use */
@@ -192,10 +210,15 @@ static void handle_msg(char *msg)
 		if(strncmp(msg, "/quit", 5) == 0)  {
 			cont = NO;
 		} else if(strncmp(msg, "/nick", 5) == 0) {
-			strncpy(nnick, msg+6, MAX_NICK_SIZE);
-			snprintf(lmsg, MSG_LEN, "is now known as %s", nnick);
-			write_status(lmsg);
-			strncpy(nick, nnick, MAX_NICK_SIZE);
+			if(is_nick_allowed(msg+6)) {
+				strncpy(nnick, msg+6, MAX_NICK_SIZE);
+				snprintf(lmsg, MSG_LEN, "is now known as %s", nnick);
+				write_status(lmsg);
+				strncpy(nick, nnick, MAX_NICK_SIZE);
+			} else {
+				print_line("Please specify a valid nick. Nicks must 1-15 characters and only\n"
+					"include numbers and letters.\n");
+			}
 		} else if(strncmp(msg, "/", 1) == 0) {
 			snprintf(lmsg, MSG_LEN, "Unknown command: %s\n", msg+1);
 			print_line(lmsg);
@@ -283,14 +306,27 @@ int main(int argc, char *argv[])
 
 	if(argv[2] == NULL) {
 		/* If no nick is provided, pick based on the username */
-		nick = getenv("LOGNAME");
-		if(nick == NULL) {
-			fprintf(stderr, "Can't determine username."
-				"Fix your environment or specify a name on the command line.");
+		if(getenv("LOGNAME") == NULL) {
+			fprintf(stderr, "Can't determine username. Fix your environment or specify\n"
+				"a name on the command line.\n");
+			return 1;
 		}
+		if(!is_nick_allowed(getenv("LOGNAME"))) {
+			fprintf(stderr, "Nicks must be 1-15 characters and only include numbers\n"
+				"and letters. Your username does not meet these requirements; please\n"
+				"specify a nick on the command line.\n");
+			return 1;
+		}
+		strncpy(nick, getenv("LOGNAME"), MAX_NICK_SIZE);
 	} else {
 		/* Copy from command line. */
-		nick = argv[2];
+		if(!is_nick_allowed(argv[2])) {
+			fprintf(stderr, "Nicks must be 1-15 characters and only include numbers\n"
+				"and letters. The name you have provided does not meet these\n"
+				"requirements.\n");
+			return 1;
+		}
+		strncpy(nick, argv[2], MAX_NICK_SIZE);
 	}
 
 	/* Open the file. Always write at the end. */
