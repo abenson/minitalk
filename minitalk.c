@@ -258,18 +258,20 @@ static int handle_enter(int x, int y)
 	   - tell readline we're done mucking
 	*/
 	line = rl_copy_text(0, rl_end);
-	rl_set_prompt("");
-	rl_replace_line("", 1);
-	rl_redisplay();
+	if(strlen(line) > 0) {
+		rl_set_prompt("");
+		rl_replace_line("", 1);
+		rl_redisplay();
 
-	handle_msg(line);
+		handle_msg(line);
 
-	free(line);
+		free(line);
 
-	rl_set_prompt(PROMPT);
-	rl_redisplay();
+		rl_set_prompt(PROMPT);
+		rl_redisplay();
 
-	rl_done = 1;
+		rl_done = 1;
+	}
 	return 0;
 }
 
