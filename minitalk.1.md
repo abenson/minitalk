@@ -31,7 +31,12 @@ The same, but specifying the username "admin".
 
 # NOTES
 
-The primary issue is a security concern. Anyone that needs to chat in the "room" has to be able to write to the control file. Anyone that needs read from the room needs read access. Anyone that has access to these "control" files can also inject anything they want into the chat. This truly is built on the honor system, and was designed around a single purpose: multi-user chat between trusted users on a single host.
+The primary issue is a security concern. Anyone that needs to chat in the
+"room" has to be able to write to the control file. Anyone that needs read from
+the room needs read access. Anyone that has access to these "control" files can
+also inject anything they want into the chat. This truly is built on the honor
+system, and was designed around a single purpose: multi-user chat between
+trusted users on a single host.
 
 Don't expect this to be secure.
 
