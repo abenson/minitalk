@@ -29,6 +29,7 @@ SOFTWARE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <time.h>
 
 #include <unistd.h>
@@ -57,7 +58,7 @@ SOFTWARE.
 /* File used for chat */
 static FILE *ctrl = NULL;
 
-static char nick[MAX_NICK_SIZE+1];
+static char nick[MAX_NICK_SIZE+1] = {0};
 
 /* Keep track of the last position we read from. */
 static long last_read_pos = 0;
@@ -135,17 +136,17 @@ static void print_line(char *line)
 	rl_replace_line(saved_line, 0);
 	rl_point = saved_point;
 	rl_redisplay();
-	free(saved_line);
+	rl_free(saved_line);
 }
 
 /* Read all of the messages from the transcript since the last read */
 static void check_msgs(void)
 {
-	char msg[MSG_LEN];
-	int count;
+	char msg[MSG_LEN] = {0};
+	int count = 0;
 	fd_set fds;
 	int fd;
-	struct timeval t;
+	struct timeval t = {0};
 
 	/* Timeout of 0. */
 	t.tv_sec = 0;
@@ -278,9 +279,9 @@ static int handle_enter(int x, int y)
 
 /* Don't block on I/O. */
 static void get_input(void) {
-	int count;
+	int count = 0;
 	fd_set fds;
-	struct timeval t;
+	struct timeval t = {0};
 
 	/* Timeout of 0. */
 	t.tv_sec = 0;
@@ -305,7 +306,7 @@ static void handle_exit_signal(int signal)
 
 int main(int argc, char *argv[])
 {
-	struct sigaction sa_exit;
+	struct sigaction sa_exit = {0};
 
 	/* We always require a file, will guess a nick if none provided.*/
 	if(argc < 2) {
