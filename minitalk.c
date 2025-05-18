@@ -70,6 +70,49 @@ typedef enum { NO, YES} BOOL;
 /* The program will run as long as this is set to YES. */
 BOOL cont = YES;
 
+
+/* colorize */
+#define RESET   "\033[0m"
+#define ITALIC  "\033[3m"
+#define YELLOW  "\033[33m"
+#define ORANGE  "\033[38;5;214m"
+#define BLUE    "\033[34m"
+
+
+// Color palette
+const char *color_palette[16] = {
+    "\033[31m",  // Red
+    "\033[32m",  // Green
+    "\033[33m",  // Yellow
+    "\033[34m",  // Blue
+    "\033[35m",  // Magenta
+    "\033[36m",  // Cyan
+    "\033[37m",  // White
+    "\033[90m",  // Bright Black
+    "\033[91m",  // Bright Red
+    "\033[92m",  // Bright Green
+    "\033[93m",  // Bright Yellow
+    "\033[94m",  // Bright Blue
+    "\033[95m",  // Bright Magenta
+    "\033[96m",  // Bright Cyan
+    "\033[97m",  // Bright White
+    "\033[38;5;202m" // Orange (custom)
+};
+
+// Hash function for usernames
+unsigned char hash_username(const char *username) {
+    unsigned int hash = 0;
+    while (*username) {
+        hash = (hash * 31 + *username++) & 0xFF;
+    }
+    return (unsigned char)hash;
+}
+
+void colorize_username(char *output, const char *username) {
+    unsigned char color_index = hash_username(username) & 0x0F;
+    sprintf(output, "%s%s%s", color_palette[color_index],username, RESET);
+}
+
 /* Build the text string for the time. */
 static void get_time(char *dt)
 {
@@ -87,9 +130,12 @@ static void write_msg(const char *msg)
 {
 	char dt[TIME_STRSIZE] = {0};
 
+	char colornick[50];
+  	colorize_username(colornick,nick);
+
 	get_time(dt);
 
-	fprintf(ctrl, "[%s] <%s> %s\n", dt, nick, msg);
+	fprintf(ctrl, "%s[%s]%s <%s> %s\n", YELLOW, dt, RESET, colornick, msg);
 
 	fflush(ctrl);
 }
@@ -99,9 +145,12 @@ static void write_status(const char *status)
 {
 	char dt[TIME_STRSIZE] = {0};
 
+	char colornick[50];
+  	colorize_username(colornick,nick);
+
 	get_time(dt);
 
-	fprintf(ctrl, "[%s] *** %s %s\n", dt, nick, status);
+	fprintf(ctrl, "%s[%s]%s *** %s %s%s %s\n", YELLOW, dt, ORANGE, colornick, ORANGE, status, RESET);
 
 	fflush(ctrl);
 }
